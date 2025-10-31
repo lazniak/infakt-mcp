@@ -1,68 +1,132 @@
-# inFakt MCP Server
+# inFakt MCP Server - Integracja API inFakt z Claude AI
 
-A comprehensive Model Context Protocol (MCP) server providing full integration with the inFakt API. This server enables AI assistants like Claude to interact with inFakt's invoicing and accounting platform.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)](https://www.typescriptlang.org/)
 
-## Features
+**Serwer Model Context Protocol (MCP) dla API inFakt** - profesjonalne narzędzie do automatyzacji fakturowania i księgowości w Polsce za pomocą sztucznej inteligencji Claude AI.
 
-This MCP server provides complete CRUD operations for:
+🇬🇧 **[English version](README.en.md)**
 
-- **Invoices** - Create, read, update, delete, and send invoices
-- **Clients** - Manage customer/client information
-- **Products** - Manage your product/service catalog
-- **Bank Accounts** - Manage company bank account details
-- **Payments** - Track and record payments
+## 📋 Spis treści
 
-## Prerequisites
+- [Czym jest inFakt MCP?](#czym-jest-infakt-mcp)
+- [Funkcje i możliwości](#funkcje-i-możliwości)
+- [Wymagania systemowe](#wymagania-systemowe)
+- [Instalacja](#instalacja)
+- [Konfiguracja](#konfiguracja)
+- [Dostępne narzędzia](#dostępne-narzędzia)
+- [Przykłady użycia](#przykłady-użycia)
+- [Rozwój projektu](#rozwój-projektu)
+- [Wyłączenie odpowiedzialności](#wyłączenie-odpowiedzialności)
+- [Wsparcie i pomoc](#wsparcie-i-pomoc)
+- [Licencja](#licencja)
 
-- Node.js 18 or higher
-- An inFakt account with API access
-- inFakt API key ([Get your API key](https://app.infakt.pl/app/ustawienia/inne_opcje/api))
+## Czym jest inFakt MCP?
 
-## Installation
+**inFakt MCP Server** to innowacyjne rozwiązanie umożliwiające integrację systemu fakturowania **inFakt** z asystentem AI **Claude Desktop** poprzez protokół Model Context Protocol (MCP). Dzięki temu możesz zarządzać fakturami, klientami, produktami i płatnościami używając naturalnego języka polskiego.
 
-### Clone and Install
+### Kluczowe korzyści:
+
+✅ **Automatyzacja fakturowania** - Twórz faktury konwersacyjnie, bez klikania w interfejsie  
+✅ **Pełna kontrola nad danymi** - Wszystkie operacje CRUD na fakturach, klientach, produktach  
+✅ **Naturalny język polski** - Rozmawiaj z AI po polsku o swoich fakturach  
+✅ **Bezpieczeństwo** - Klucz API przechowywany lokalnie, bez dostępu stron trzecich  
+✅ **Open source** - Kod dostępny publicznie, możliwość audytu i modyfikacji  
+✅ **Darmowe** - Licencja MIT, bez opłat za oprogramowanie  
+
+## Funkcje i możliwości
+
+### 🧾 Faktury (6 narzędzi)
+- **Przeglądanie faktur** - Lista wszystkich faktur z zaawansowanym filtrowaniem (daty, status, zapłacone/niezapłacone)
+- **Szczegóły faktury** - Pełne informacje o wybranej fakturze
+- **Tworzenie faktur** - Automatyczne generowanie faktur z usługami i produktami
+- **Edycja faktur** - Aktualizacja istniejących dokumentów
+- **Usuwanie faktur** - Bezpieczne usuwanie niepotrzebnych faktur
+- **Wysyłka e-mail** - Automatyczne wysyłanie faktur do klientów
+
+### 👥 Klienci (5 narzędzi)
+- **Baza klientów** - Zarządzanie danymi kontrahentów
+- **Dodawanie klientów** - Szybkie wprowadzanie nowych kontrahentów z pełnymi danymi (NIP, adres, kontakt)
+- **Edycja danych** - Aktualizacja informacji o klientach
+- **Wyszukiwanie** - Szybkie odnajdywanie klientów po nazwie lub NIP
+- **Usuwanie** - Bezpieczne usuwanie nieaktywnych klientów
+
+### 📦 Produkty i usługi (5 narzędzi)
+- **Katalog produktowy** - Zarządzanie ofertą usług i produktów
+- **Ceny i VAT** - Automatyczne obliczanie cen netto/brutto z VAT
+- **Edycja produktów** - Aktualizacja cen i opisów
+- **Jednostki miary** - Obsługa różnych jednostek (szt, kg, usł, godz.)
+
+### 🏦 Konta bankowe (5 narzędzi)
+- **Zarządzanie rachunkami** - Lista kont firmowych
+- **Dodawanie kont** - IBAN, SWIFT, nazwa banku
+- **Domyślne konto** - Ustawianie preferowanego rachunku
+
+### 💰 Płatności (3 narzędzia)
+- **Historia płatności** - Śledzenie wpłat
+- **Rejestrowanie wpłat** - Automatyczne oznaczanie faktur jako opłacone
+- **Raportowanie** - Analiza płatności według faktur
+
+## Wymagania systemowe
+
+- **Node.js** w wersji 18.0.0 lub nowszej ([Pobierz Node.js](https://nodejs.org/))
+- **Konto inFakt** z aktywnym dostępem API ([Załóż konto](https://app.infakt.pl/))
+- **Claude Desktop** ([Pobierz Claude](https://claude.ai/download))
+- **Klucz API inFakt** ([Wygeneruj klucz](https://app.infakt.pl/app/ustawienia.integrations.html))
+
+## Instalacja
+
+### Krok 1: Pobierz kod źródłowy
 
 ```bash
 git clone https://github.com/lazniak/infakt-mcp.git
 cd infakt-mcp
+```
+
+### Krok 2: Zainstaluj zależności
+
+```bash
 npm install
 ```
 
-### Build
+### Krok 3: Zbuduj projekt
 
 ```bash
 npm run build
 ```
 
-**Note:** The server now supports loading API keys from `.env` files when running locally using `npm run dev` (which uses dotenv-cli). For Claude Desktop integration, always set the API key in `claude_desktop_config.json`.
+Projekt zostanie skompilowany do katalogu `dist/`.
 
-## Configuration
+## Konfiguracja
 
-### 1. Set up your API key
+### 1. Pobierz klucz API z inFakt
 
-**For Claude Desktop:** Set the API key in your Claude Desktop configuration (see step 2 below).
+1. Zaloguj się do swojego konta: [https://app.infakt.pl](https://app.infakt.pl)
+2. Przejdź do: **Ustawienia → Integracje → API**
+3. Skopiuj swój unikalny klucz API
+4. Link bezpośredni: [https://app.infakt.pl/app/ustawienia.integrations.html](https://app.infakt.pl/app/ustawienia.integrations.html)
 
-**For local development/testing:** Create a `.env` file in the project root:
+### 2. Konfiguracja dla Claude Desktop
 
-```bash
-cp env.example .env
+Edytuj plik konfiguracyjny Claude Desktop:
+
+**Windows:**
+```
+%APPDATA%\Claude\claude_desktop_config.json
 ```
 
-Edit `.env` and add your inFakt API key:
-
+**macOS:**
 ```
-INFAKT_API_KEY=your_actual_api_key_here
+~/Library/Application Support/Claude/claude_desktop_config.json
 ```
 
-Then run with: `npm run dev`
+**Linux:**
+```
+~/.config/Claude/claude_desktop_config.json
+```
 
-### 2. Configure Claude Desktop
-
-Add this server to your Claude Desktop configuration file:
-
-**On macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-**On Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+Dodaj następującą konfigurację (zamień ścieżkę i klucz API):
 
 ```json
 {
@@ -70,178 +134,303 @@ Add this server to your Claude Desktop configuration file:
     "infakt": {
       "command": "node",
       "args": [
-        "A:\\code\\inFakt-mpc\\dist\\index.js"
+        "C:\\Users\\TwojUser\\infakt-mcp\\dist\\index.js"
       ],
       "env": {
-        "INFAKT_API_KEY": "your_api_key_here"
+        "INFAKT_API_KEY": "twoj_rzeczywisty_klucz_api_z_infakt"
       }
     }
   }
 }
 ```
 
-**Note:** Replace the path with the actual path to your installation.
+**⚠️ WAŻNE:**
+- Podmień `C:\\Users\\TwojUser\\infakt-mpc\\dist\\index.js` na **rzeczywistą ścieżkę** do swojej instalacji
+- Na Windows używaj **podwójnych ukośników** (\\\\) w ścieżce
+- Wklej swój **prawdziwy klucz API** (nie zostawiaj przykładowego)
+- Klucz API **MUSI** być w sekcji `env` - serwer nie używa plików `.env` w Claude Desktop
 
-**Important:** The API key MUST be set in the `env` section of the configuration above. The server does not use `.env` files when running through Claude Desktop (to avoid stdio conflicts).
+### 3. Uruchom Claude Desktop
 
-### 3. Restart Claude Desktop
+Po zapisaniu konfiguracji uruchom ponownie aplikację Claude Desktop. Serwer inFakt zostanie automatycznie załadowany.
 
-After updating the configuration, restart Claude Desktop to load the MCP server.
+### 4. Weryfikacja działania
 
-## Available Tools
+Po uruchomieniu Claude Desktop, w nowej konwersacji powinieneś móc używać poleceń związanych z inFakt. Sprawdź czy działa:
 
-### Invoice Operations
+> "Pokaż listę moich ostatnich faktur"
 
-- `list_invoices` - List all invoices with optional filters
-  - Filters: date ranges, status, paid status, search query
-- `get_invoice` - Get detailed information about a specific invoice
-- `create_invoice` - Create a new invoice
-- `update_invoice` - Update an existing invoice
-- `delete_invoice` - Delete an invoice
-- `send_invoice` - Send an invoice via email
+Jeśli wszystko jest poprawnie skonfigurowane, Claude wyświetli Twoje faktury z inFakt.
 
-### Client Operations
+## Dostępne narzędzia
 
-- `list_clients` - List all clients with pagination
-- `get_client` - Get detailed information about a specific client
-- `create_client` - Create a new client
-- `update_client` - Update an existing client
-- `delete_client` - Delete a client
+Serwer udostępnia **31 narzędzi** do zarządzania systemem inFakt:
 
-### Product Operations
+### Operacje na fakturach
+| Narzędzie | Opis | Przykład użycia |
+|-----------|------|-----------------|
+| `list_invoices` | Lista faktur z filtrami | "Pokaż faktury z października" |
+| `get_invoice` | Szczegóły faktury | "Szczegóły faktury 12345" |
+| `create_invoice` | Nowa faktura | "Utwórz fakturę dla firmy ABC" |
+| `update_invoice` | Edycja faktury | "Zmień datę płatności faktury 123" |
+| `delete_invoice` | Usunięcie faktury | "Usuń fakturę 456" |
+| `send_invoice` | Wysyłka e-mail | "Wyślij fakturę 789 do klienta" |
 
-- `list_products` - List all products with pagination
-- `get_product` - Get detailed information about a specific product
-- `create_product` - Create a new product
-- `update_product` - Update an existing product
-- `delete_product` - Delete a product
+### Operacje na klientach
+| Narzędzie | Opis | Przykład użycia |
+|-----------|------|-----------------|
+| `list_clients` | Lista klientów | "Pokaż wszystkich klientów" |
+| `get_client` | Dane klienta | "Dane firmy XYZ" |
+| `create_client` | Nowy klient | "Dodaj klienta ABC Sp. z o.o." |
+| `update_client` | Edycja klienta | "Zmień adres klienta 123" |
+| `delete_client` | Usunięcie klienta | "Usuń klienta 456" |
 
-### Bank Account Operations
+### Operacje na produktach
+| Narzędzie | Opis | Przykład użycia |
+|-----------|------|-----------------|
+| `list_products` | Katalog produktów | "Pokaż wszystkie usługi" |
+| `get_product` | Szczegóły produktu | "Szczegóły produktu 123" |
+| `create_product` | Nowy produkt | "Dodaj usługę Hosting WWW" |
+| `update_product` | Edycja produktu | "Zmień cenę produktu 123 na 150 zł" |
+| `delete_product` | Usunięcie produktu | "Usuń produkt 456" |
 
-- `list_bank_accounts` - List all bank accounts
-- `get_bank_account` - Get detailed information about a specific bank account
-- `create_bank_account` - Create a new bank account
-- `update_bank_account` - Update an existing bank account
-- `delete_bank_account` - Delete a bank account
+## Przykłady użycia
 
-### Payment Operations
+Po poprawnej konfiguracji możesz używać naturalnego języka polskiego do zarządzania inFakt:
 
-- `list_payments` - List all payments with optional filters
-- `get_payment` - Get detailed information about a specific payment
-- `create_payment` - Create a new payment record
+### 📊 Przeglądanie faktur
 
-## Usage Examples
+```
+Ty: Pokaż mi wszystkie faktury z października 2025
+Claude: [wyświetla listę faktur]
 
-Once configured with Claude Desktop, you can use natural language to interact with your inFakt account:
+Ty: Które faktury są niezapłacone?
+Claude: [filtruje i pokazuje niezapłacone]
 
-### Example Prompts
-
-**List recent invoices:**
-> "Show me all invoices from the last month"
-
-**Create a new invoice:**
-> "Create an invoice for client ID 123 dated today with one service: Web Development, 8 hours at 500 PLN per hour, 23% VAT"
-
-**Find a client:**
-> "Find client information for 'ABC Company'"
-
-**Create a new client:**
-> "Add a new client: XYZ Corp, street: Główna 10, city: Warsaw, postal code: 00-001, country: Poland, NIP: 1234567890"
-
-**Check payments:**
-> "Show me all payments for invoice 456"
-
-**Send an invoice:**
-> "Send invoice 789 via email to [email protected]"
-
-## Development
-
-### Build and Watch
-
-For development with automatic rebuilding:
-
-```bash
-npm run watch
+Ty: Pokaż szczegóły faktury numer FV/2025/10/123
+Claude: [wyświetla pełne dane faktury]
 ```
 
-### Run Locally
+### ➕ Tworzenie nowej faktury
+
+```
+Ty: Utwórz fakturę dla klienta o ID 123, data wystawienia dzisiaj, 
+    termin płatności za 14 dni, przelew. Dodaj usługę: Tworzenie 
+    strony WWW, 40 godzin po 150 zł netto, VAT 23%
+    
+Claude: [tworzy fakturę i wyświetla potwierdzenie]
+```
+
+### 👤 Zarządzanie klientami
+
+```
+Ty: Znajdź dane kontaktowe firmy "ABC Software"
+Claude: [wyszukuje i wyświetla dane klienta]
+
+Ty: Dodaj nowego klienta: XYZ Sp. z o.o., ul. Główna 10, 
+    Warszawa 00-001, NIP: 1234567890, email: [email protected]
+    
+Claude: [dodaje klienta i potwierdza]
+```
+
+### 📦 Produkty i usługi
+
+```
+Ty: Dodaj nowy produkt do katalogu: Hosting WWW Premium, 
+    cena 200 zł miesięcznie, VAT 23%, jednostka: usługa
+    
+Claude: [dodaje produkt]
+
+Ty: Zaktualizuj cenę produktu "Hosting WWW Premium" na 250 zł
+Claude: [aktualizuje i potwierdza]
+```
+
+### 💸 Płatności
+
+```
+Ty: Zarejestruj płatność 1500 zł dla faktury 789, 
+    data wpłaty dzisiaj, przelew bankowy
+    
+Claude: [rejestruje płatność i oznacza fakturę jako opłaconą]
+
+Ty: Pokaż wszystkie płatności z ostatniego miesiąca
+Claude: [wyświetla historię płatności]
+```
+
+### 📧 Wysyłka faktur
+
+```
+Ty: Wyślij fakturę 456 na adres [email protected]
+Claude: [wysyła fakturę emailem]
+```
+
+## Rozwój projektu
+
+### Testowanie lokalne
+
+Do testowania bez Claude Desktop, użyj pliku `.env`:
 
 ```bash
+# Utwórz plik .env
+cp env.example .env
+
+# Edytuj .env i dodaj klucz API
+echo "INFAKT_API_KEY=twoj_klucz" > .env
+
+# Uruchom z automatycznym wczytaniem .env
 npm run dev
 ```
 
-## Project Structure
+### Struktura projektu
 
 ```
 infakt-mcp/
 ├── src/
-│   ├── index.ts          # Main MCP server implementation
-│   ├── infakt-client.ts  # inFakt API client wrapper
-│   └── types.ts          # TypeScript type definitions
-├── dist/                 # Compiled JavaScript (generated)
-├── package.json
-├── tsconfig.json
-├── env.example           # Example environment variables
-└── README.md
+│   ├── index.ts          # Główny serwer MCP (31 narzędzi)
+│   ├── infakt-client.ts  # Klient API inFakt
+│   └── types.ts          # Definicje typów TypeScript
+├── dist/                 # Skompilowany kod (po npm run build)
+├── package.json          # Zależności i skrypty
+├── tsconfig.json         # Konfiguracja TypeScript
+└── README.md             # Ten plik
 ```
 
-## API Documentation
+### Skrypty NPM
 
-For detailed information about the inFakt API, visit:
-- [inFakt API Documentation](https://docs.infakt.pl/)
-- [inFakt Help Center](https://pomoc.infakt.pl/hc/pl/articles/115000174410-API)
+```bash
+npm run build    # Kompilacja TypeScript do JavaScript
+npm run watch    # Automatyczna rekompilacja przy zmianach
+npm run dev      # Buduj i uruchom z .env
+```
 
-## Model Context Protocol
+## Wyłączenie odpowiedzialności
 
-Learn more about MCP:
-- [MCP Official Website](https://modelcontextprotocol.io/)
-- [MCP Announcement](https://www.anthropic.com/news/model-context-protocol)
-- [MCP GitHub Repository](https://github.com/modelcontextprotocol)
+**⚠️ WAŻNE - PRZECZYTAJ UWAŻNIE**
 
-## Troubleshooting
+### Użycie na własne ryzyko
 
-### Server not appearing in Claude
+To oprogramowanie jest dostarczane **"takie jakie jest"**, bez jakichkolwiek gwarancji. Autor i współtwórcy **nie ponoszą odpowiedzialności** za:
 
-1. Check that the path in `claude_desktop_config.json` is correct
-2. Ensure the project is built (`npm run build`)
-3. Verify your API key is set correctly
-4. Restart Claude Desktop completely
-5. Check Claude's log files for errors
+- ❌ Błędy w wystawionych fakturach lub dokumentach księgowych
+- ❌ Nieprawidłowe obliczenia VAT lub innych podatków
+- ❌ Utratę danych lub przerwanie działalności
+- ❌ Naruszenie przepisów podatkowych lub księgowych
+- ❌ Jakiekolwiek szkody finansowe wynikające z użycia oprogramowania
 
-### API Errors
+### Twoja odpowiedzialność
 
-- **401 Unauthorized**: Check your API key is correct
-- **404 Not Found**: Verify the resource ID exists
-- **422 Unprocessable Entity**: Check required fields in your request
+**UŻYTKOWNIK** przyjmuje pełną odpowiedzialność za:
 
-### Getting Logs
+✅ **Weryfikację** - Sprawdzanie poprawności wszystkich generowanych dokumentów  
+✅ **Zgodność prawna** - Przestrzeganie przepisów podatkowych i księgowych  
+✅ **Bezpieczeństwo** - Ochronę kluczy API i danych dostępowych  
+✅ **Konsekwencje** - Skutki użycia oprogramowania w środowisku produkcyjnym  
 
-Claude Desktop logs can be found at:
-- **macOS**: `~/Library/Logs/Claude/`
-- **Windows**: `%APPDATA%\Claude\logs\`
+### Zalecenia
 
-## Contributing
+🔒 **To NIE jest certyfikowane narzędzie księgowe**
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Przed użyciem w firmie:
+1. Skonsultuj się z księgowym lub doradcą podatkowym
+2. Przetestuj dokładnie w środowisku testowym
+3. Zawsze weryfikuj generowane dokumenty
+4. Zachowaj kopie zapasowe danych
 
-## License
+📖 **Pełna treść licencji i wyłączenia odpowiedzialności:** [LICENSE](LICENSE)
 
-MIT License - feel free to use this in your own projects.
+## Wsparcie i pomoc
 
-## Support
+### Problemy techniczne
 
-For issues related to:
-- **This MCP server**: [Open an issue on GitHub](https://github.com/lazniak/infakt-mcp/issues)
-- **inFakt API**: Contact inFakt support
-- **Claude/MCP**: Refer to Anthropic's documentation
+**Serwer nie pojawia się w Claude:**
+1. ✅ Sprawdź ścieżkę w `claude_desktop_config.json` (użyj pełnej, bezwzględnej ścieżki)
+2. ✅ Upewnij się że projekt jest zbudowany (`npm run build`)
+3. ✅ Zweryfikuj klucz API (skopiuj ponownie z inFakt)
+4. ✅ Uruchom Claude Desktop całkowicie od nowa (zakończ proces i uruchom ponownie)
+5. ✅ Sprawdź logi Claude (patrz poniżej)
 
-## Author
+**Błędy API:**
+- **401 Unauthorized** → Nieprawidłowy lub wygasły klucz API
+- **404 Not Found** → Zasób o podanym ID nie istnieje w Twoim koncie
+- **422 Unprocessable Entity** → Brakujące lub nieprawidłowe dane w żądaniu
 
-Created by [lazniak](https://github.com/lazniak)
+### Logi Claude Desktop
 
-## Acknowledgments
+**Windows:**
+```
+%APPDATA%\Claude\logs\
+```
 
-- Built with the [Model Context Protocol SDK](https://github.com/modelcontextprotocol/typescript-sdk)
-- Integrates with [inFakt API](https://docs.infakt.pl/)
-- Inspired by Anthropic's vision for connected AI systems
+**macOS:**
+```
+~/Library/Logs/Claude/
+```
 
+**Linux:**
+```
+~/.config/Claude/logs/
+```
+
+### Zgłaszanie błędów
+
+Znalazłeś błąd? Masz pomysł na nową funkcję?
+
+1. 🐛 **Zgłoś problem:** [GitHub Issues](https://github.com/lazniak/infakt-mcp/issues)
+2. 💡 **Zaproponuj funkcję:** [GitHub Discussions](https://github.com/lazniak/infakt-mcp/discussions)
+3. 🔧 **Pull Request:** Każdy wkład jest mile widziany!
+
+## Dodatkowe zasoby
+
+### Dokumentacja
+
+- 📘 [inFakt API Documentation](https://docs.infakt.pl/) - Oficjalna dokumentacja API
+- 📗 [Pomoc inFakt](https://pomoc.infakt.pl/hc/pl/articles/115000174410-API) - Centrum pomocy
+- 📙 [Model Context Protocol](https://modelcontextprotocol.io/) - Specyfikacja MCP
+- 📕 [Claude AI](https://www.anthropic.com/claude) - Informacje o Claude
+
+### Technologie
+
+Projekt wykorzystuje:
+- **[TypeScript 5.7](https://www.typescriptlang.org/)** - Typowany JavaScript
+- **[Node.js 18+](https://nodejs.org/)** - Runtime
+- **[Model Context Protocol SDK](https://github.com/modelcontextprotocol/typescript-sdk)** - Protokół MCP
+- **[Axios](https://axios-http.com/)** - Klient HTTP
+- **[inFakt API v3](https://docs.infakt.pl/)** - REST API
+
+## Licencja
+
+**Licencja MIT** - Zobacz pełny tekst w pliku [LICENSE](LICENSE)
+
+- ✅ Komercyjne użycie dozwolone
+- ✅ Modyfikacje dozwolone
+- ✅ Dystrybucja dozwolona
+- ✅ Użycie prywatne dozwolone
+- ❌ Brak gwarancji
+- ❌ Autor nie ponosi odpowiedzialności
+
+## Autor i społeczność
+
+**Autor:** [lazniak](https://github.com/lazniak)  
+**Repository:** [github.com/lazniak/infakt-mcp](https://github.com/lazniak/infakt-mcp)  
+**Wersja:** 1.0.0
+
+### Podziękowania
+
+- 🙏 **Anthropic** - za stworzenie Model Context Protocol
+- 🙏 **inFakt** - za udostępnienie API
+- 🙏 **Społeczność Open Source** - za wsparcie i feedback
+
+### Wsparcie projektu
+
+Jeśli ten projekt jest dla Ciebie przydatny:
+
+⭐ **Zostaw gwiazdkę na GitHub** - pomaga innym znaleźć projekt  
+🐛 **Zgłaszaj błędy** - pomóż w rozwoju  
+💻 **Kod** - pull requesty są mile widziane  
+📢 **Udostępnij** - powiedz o projekcie innym  
+
+---
+
+**Made with ❤️ for Polish entrepreneurs and developers**
+
+**Keywords:** inFakt API, Claude AI, MCP server, automatyzacja fakturowania, AI księgowość, faktury API, inFakt integracja, Model Context Protocol, Claude Desktop, TypeScript, Node.js, automatyzacja biznesu, sztuczna inteligencja w księgowości

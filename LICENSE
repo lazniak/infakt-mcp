@@ -20,3 +20,56 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+================================================================================
+WYŁĄCZENIE ODPOWIEDZIALNOŚCI / DISCLAIMER OF LIABILITY
+================================================================================
+
+UŻYCIE NA WŁASNE RYZYKO / USE AT YOUR OWN RISK
+
+Niniejsze oprogramowanie jest dostarczane "takie jakie jest", bez jakichkolwiek
+gwarancji, wyraźnych lub dorozumianych. Autor i współtwórcy tego projektu nie
+ponoszą żadnej odpowiedzialności za:
+
+1. Jakiekolwiek szkody wynikające z użycia lub niemożności użycia tego 
+   oprogramowania
+2. Utratę danych, przychodu lub zysku
+3. Przerwanie działalności biznesowej
+4. Błędy w przetwarzaniu danych finansowych lub księgowych
+5. Nieprawidłowe wystawienie faktur lub dokumentów księgowych
+6. Naruszenie przepisów podatkowych lub księgowych
+7. Bezpośrednie, pośrednie, przypadkowe, specjalne, przykładowe lub wtórne szkody
+
+UŻYTKOWNIK PRZYJMUJE PEŁNĄ ODPOWIEDZIALNOŚĆ ZA:
+
+- Weryfikację poprawności wszystkich generowanych dokumentów
+- Zgodność z obowiązującymi przepisami prawa podatkowego i księgowego
+- Bezpieczeństwo i ochronę kluczy API oraz danych dostępowych
+- Konsekwencje użycia oprogramowania w środowisku produkcyjnym
+
+TO OPROGRAMOWANIE NIE JEST CERTYFIKOWANYM NARZĘDZIEM KSIĘGOWYM.
+Przed użyciem w środowisku produkcyjnym zaleca się konsultację z księgowym
+lub doradcą podatkowym.
+
+================================================================================
+
+This software is provided "as is", without warranty of any kind, express or
+implied. The author and contributors of this project shall not be liable for:
+
+1. Any damages arising from the use or inability to use this software
+2. Loss of data, revenue or profit
+3. Business interruption
+4. Errors in processing financial or accounting data
+5. Incorrect issuance of invoices or accounting documents
+6. Violation of tax or accounting regulations
+7. Direct, indirect, incidental, special, exemplary or consequential damages
+
+USER ASSUMES FULL RESPONSIBILITY FOR:
+
+- Verification of the correctness of all generated documents
+- Compliance with applicable tax and accounting laws
+- Security and protection of API keys and access credentials
+- Consequences of using the software in production environment
+
+THIS SOFTWARE IS NOT A CERTIFIED ACCOUNTING TOOL.
+Before using in production environment, consultation with an accountant
+or tax advisor is recommended.

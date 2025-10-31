@@ -1,7 +1,7 @@
 {
   "name": "infakt-mcp",
   "version": "1.0.0",
-  "description": "Model Context Protocol server for inFakt API - full support for invoices, clients, products, payments, and bank accounts",
+  "description": "Serwer Model Context Protocol dla API inFakt - automatyzacja fakturowania i księgowości z Claude AI | inFakt API integration with Claude Desktop for automated invoicing and accounting",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -11,13 +11,30 @@
     "dev": "tsc && npx dotenv-cli node dist/index.js"
   },
   "keywords": [
-    "mcp",
     "infakt",
+    "infakt-api",
+    "mcp",
     "model-context-protocol",
-    "ai",
     "claude",
+    "claude-ai",
+    "claude-desktop",
+    "faktury",
     "invoices",
-    "accounting"
+    "accounting",
+    "księgowość",
+    "automatyzacja",
+    "automation",
+    "ai",
+    "artificial-intelligence",
+    "typescript",
+    "nodejs",
+    "api-integration",
+    "fakturowanie",
+    "invoicing",
+    "poland",
+    "polska",
+    "vat",
+    "tax"
   ],
   "author": "lazniak",
   "license": "MIT",
