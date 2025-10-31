@@ -225,8 +225,23 @@ export class InFaktAPIClient {
       
       debugLog('list_clients called with params:', safeParams);
       const response = await this.client.get('/clients.json', { params: safeParams });
-      debugLog('list_clients response:', { count: response.data?.length });
-      return response.data;
+      debugLog('list_clients response:', { 
+        count: response.data?.length,
+        data: response.data 
+      });
+      
+      // API might return object instead of array
+      if (response.data && !Array.isArray(response.data)) {
+        debugLog('WARNING: API returned non-array response, extracting clients');
+        // Some APIs wrap results in { clients: [...] }
+        if (response.data.clients) {
+          return response.data.clients;
+        }
+        // Or just return empty array if structure is unexpected
+        return [];
+      }
+      
+      return response.data || [];
     } catch (error) {
       debugLog('ERROR list_clients:', error);
       this.handleError(error);
