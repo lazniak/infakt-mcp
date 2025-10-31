@@ -104,9 +104,14 @@ Returns array of invoice objects with:
 
 CRITICAL PRICE FORMATTING RULES:
 ================================
-unit_net_price MUST be a decimal string with exactly 2 decimal places:
-  ✅ CORRECT: "500.00", "1800.00", "150.00", "99.50"
-  ❌ WRONG: "500", "1800", 150, 1800
+unit_net_price MUST be a decimal string with COMMA (Polish format):
+  ✅ CORRECT: "500,00", "1800,00", "150,00", "99,50"
+  ❌ WRONG: "500.00", "1800.00", "500", "1800", 150, 1800
+
+POLISH NUMBER FORMAT REQUIRED:
+- Use COMMA not DOT: "500,00" not "500.00"
+- Always 2 decimal places
+- This is CRITICAL for Polish API!
 
 STEP-BY-STEP GUIDE:
 ===================
@@ -118,7 +123,7 @@ STEP-BY-STEP GUIDE:
 3. Format each service with EXACT decimal format:
    {
      "name": "Service description",
-     "unit_net_price": "AMOUNT.00",  ← MUST include .00
+     "unit_net_price": "AMOUNT,00",  ← MUST use COMMA not dot!
      "quantity": 1,
      "tax_symbol": 23,  ← VAT rate (23, 8, 5, 0)
      "unit": "usł"  ← Optional: szt, usł, godz, kg, etc.
@@ -127,13 +132,13 @@ STEP-BY-STEP GUIDE:
 EXAMPLES:
 =========
 For 500 PLN netto:
-  unit_net_price: "500.00" (NOT "500")
+  unit_net_price: "500,00" (NOT "500.00" or "500")
 
 For 1800 PLN netto:
-  unit_net_price: "1800.00" (NOT "1800")
+  unit_net_price: "1800,00" (NOT "1800.00" or "1800")
 
 For 150 PLN per hour, 8 hours:
-  unit_net_price: "150.00", quantity: 8
+  unit_net_price: "150,00", quantity: 8
 
 PAYMENT METHODS:
 ================
@@ -171,7 +176,7 @@ The API will automatically calculate:
         },
         services: {
           type: 'array',
-          description: 'Array of services/products. Each service MUST have unit_net_price as decimal string with .00',
+          description: 'Array of services/products. Each service MUST have unit_net_price with COMMA: "500,00" not "500.00"',
           items: {
             type: 'object',
             properties: {
@@ -189,7 +194,7 @@ The API will automatically calculate:
               },
               unit_net_price: { 
                 type: 'string', 
-                description: 'CRITICAL: Unit net price as STRING with 2 decimals. Examples: "500.00" for 500 PLN, "1800.00" for 1800 PLN, "150.00" for 150 PLN. NEVER use: "500", "1800", 150 (without .00)' 
+                description: 'CRITICAL: Unit net price with COMMA (Polish format). Examples: "500,00" for 500 PLN, "1800,00" for 1800 PLN, "150,00" for 150 PLN. NEVER use dots: "500.00" is WRONG! Must be "500,00"' 
               },
               unit: { 
                 type: 'string', 
