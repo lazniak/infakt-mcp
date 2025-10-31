@@ -24,6 +24,31 @@ import type {
   PaginationParams,
 } from './types.js';
 
+/**
+ * Format price to ensure it has 2 decimal places
+ * Fixes issue where "500" becomes 5.00 instead of 500.00
+ */
+function formatPrice(price: string | number): string {
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+  
+  if (isNaN(numPrice)) {
+    throw new Error(`Invalid price value: ${price}`);
+  }
+  
+  return numPrice.toFixed(2);
+}
+
+/**
+ * Normalize invoice services to ensure proper price formatting
+ */
+function normalizeInvoiceServices(services: any[]): any[] {
+  return services.map(service => ({
+    ...service,
+    unit_net_price: formatPrice(service.unit_net_price),
+    quantity: service.quantity || 1,
+  }));
+}
+
 export class InFaktAPIClient {
   private client: AxiosInstance;
   private apiKey: string;
@@ -76,7 +101,13 @@ export class InFaktAPIClient {
 
   async createInvoice(data: CreateInvoiceParams): Promise<Invoice> {
     try {
-      const response = await this.client.post('/invoices.json', { invoice: data });
+      // Normalize services to ensure proper price formatting
+      const normalizedData = {
+        ...data,
+        services: normalizeInvoiceServices(data.services),
+      };
+      
+      const response = await this.client.post('/invoices.json', { invoice: normalizedData });
       return response.data;
     } catch (error) {
       this.handleError(error);
@@ -85,7 +116,12 @@ export class InFaktAPIClient {
 
   async updateInvoice(id: number, data: Partial<CreateInvoiceParams>): Promise<Invoice> {
     try {
-      const response = await this.client.put(`/invoices/${id}.json`, { invoice: data });
+      // Normalize services if they are being updated
+      const normalizedData = data.services 
+        ? { ...data, services: normalizeInvoiceServices(data.services) }
+        : data;
+        
+      const response = await this.client.put(`/invoices/${id}.json`, { invoice: normalizedData });
       return response.data;
     } catch (error) {
       this.handleError(error);
