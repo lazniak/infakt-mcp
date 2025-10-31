@@ -69,9 +69,11 @@ npm run build
 
 Utwórz plik `.env` w katalogu głównym projektu:
 
-```bash
+```
 INFAKT_API_KEY=twoj_klucz_api_tutaj
 ```
+
+**Uwaga:** Możesz też użyć `.env.local` - oba pliki są automatycznie wczytywane przez serwer.
 
 ### 6. Skonfiguruj Claude Desktop
 

@@ -16,7 +16,7 @@ This MCP server provides complete CRUD operations for:
 
 - Node.js 18 or higher
 - An inFakt account with API access
-- inFakt API key ([Get your API key](https://app.infakt.pl/app/ustawienia.integrations.html))
+- inFakt API key ([Get your API key](https://app.infakt.pl/app/ustawienia/inne_opcje/api))
 
 ## Installation
 
@@ -33,6 +33,8 @@ npm install
 ```bash
 npm run build
 ```
+
+**Note:** The server now supports loading API keys from `.env` files automatically using the `dotenv` package.
 
 ## Configuration
 

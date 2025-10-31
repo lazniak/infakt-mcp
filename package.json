@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
-    "axios": "^1.7.9"
+    "axios": "^1.7.9",
+    "dotenv": "^17.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.10.1",
@@ -37,4 +38,3 @@
     "node": ">=18.0.0"
   }
 }
-

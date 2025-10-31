@@ -7,6 +7,7 @@
  * Supports invoices, clients, products, payments, and bank accounts with CRUD operations
  */
 
+import { config } from 'dotenv';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
@@ -14,6 +15,9 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { InFaktAPIClient } from './infakt-client.js';
+
+// Load environment variables from .env file
+config();
 
 // Load API key from environment
 const INFAKT_API_KEY = process.env.INFAKT_API_KEY;
