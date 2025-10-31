@@ -46,19 +46,44 @@ const server = new Server(
 const invoiceTools = [
   {
     name: 'list_invoices',
-    description: 'List all invoices with optional filters. Returns a list of invoices from inFakt.',
+    description: `List all invoices from inFakt with optional filtering.
+
+USAGE GUIDE:
+============
+Use this to find invoices by:
+- Date range (invoice_date_from/to)
+- Status (draft, sent, paid)
+- Payment status (paid: true/false)
+- Search text (q: invoice number, client name, etc.)
+
+COMMON QUERIES:
+===============
+"Show recent invoices" → No filters, returns last 25
+"Show unpaid invoices" → paid: false
+"Invoices from October" → invoice_date_from: "2025-10-01", invoice_date_to: "2025-10-31"
+"Find invoice for ABC Company" → q: "ABC"
+
+RESPONSE:
+=========
+Returns array of invoice objects with:
+- id (use for get_invoice, update_invoice, etc.)
+- invoice_number (e.g., "1/10/2025")
+- client_company_name
+- net_price, gross_price, tax_price
+- status, paid
+- dates (invoice_date, sale_date, payment_date)`,
     inputSchema: {
       type: 'object',
       properties: {
-        limit: { type: 'number', description: 'Number of results to return (default: 25)' },
-        offset: { type: 'number', description: 'Number of results to skip (default: 0)' },
-        q: { type: 'string', description: 'Search query string' },
+        limit: { type: 'number', description: 'Number of results to return (default: 25, max: 100)' },
+        offset: { type: 'number', description: 'Number of results to skip for pagination (default: 0)' },
+        q: { type: 'string', description: 'Search query: invoice number, client name, NIP, etc.' },
         invoice_date_from: { type: 'string', description: 'Filter by invoice date from (YYYY-MM-DD)' },
         invoice_date_to: { type: 'string', description: 'Filter by invoice date to (YYYY-MM-DD)' },
         sale_date_from: { type: 'string', description: 'Filter by sale date from (YYYY-MM-DD)' },
         sale_date_to: { type: 'string', description: 'Filter by sale date to (YYYY-MM-DD)' },
-        status: { type: 'string', description: 'Filter by status (e.g., draft, sent, paid)' },
-        paid: { type: 'boolean', description: 'Filter by paid status' },
+        status: { type: 'string', description: 'Filter by status: "draft", "sent", "paid", "cancelled"' },
+        paid: { type: 'boolean', description: 'Filter by payment status: true (paid) or false (unpaid)' },
       },
     },
   },
@@ -75,32 +100,113 @@ const invoiceTools = [
   },
   {
     name: 'create_invoice',
-    description: 'Create a new invoice in inFakt. The API automatically calculates net_price, gross_price, and tax_price based on unit_net_price, quantity, and tax_symbol. IMPORTANT: unit_net_price must be provided as a decimal string (e.g., "1800.00" for 1800 PLN, not "1800").',
+    description: `Create a new invoice in inFakt system.
+
+CRITICAL PRICE FORMATTING RULES:
+================================
+unit_net_price MUST be a decimal string with exactly 2 decimal places:
+  ✅ CORRECT: "500.00", "1800.00", "150.00", "99.50"
+  ❌ WRONG: "500", "1800", 150, 1800
+
+STEP-BY-STEP GUIDE:
+===================
+1. Get client_id from list_clients or get_client
+2. Calculate dates:
+   - invoice_date: YYYY-MM-DD format (e.g., "2025-10-31")
+   - sale_date: Usually same as invoice_date
+   - payment_date: Add payment term to invoice_date (e.g., 7 days = "2025-11-07")
+3. Format each service with EXACT decimal format:
+   {
+     "name": "Service description",
+     "unit_net_price": "AMOUNT.00",  ← MUST include .00
+     "quantity": 1,
+     "tax_symbol": 23,  ← VAT rate (23, 8, 5, 0)
+     "unit": "usł"  ← Optional: szt, usł, godz, kg, etc.
+   }
+
+EXAMPLES:
+=========
+For 500 PLN netto:
+  unit_net_price: "500.00" (NOT "500")
+
+For 1800 PLN netto:
+  unit_net_price: "1800.00" (NOT "1800")
+
+For 150 PLN per hour, 8 hours:
+  unit_net_price: "150.00", quantity: 8
+
+PAYMENT METHODS:
+================
+- "transfer" (przelew)
+- "cash" (gotówka)  
+- "card" (karta)
+- "payu" (PayU)
+
+The API will automatically calculate:
+- net_price (unit_net_price × quantity)
+- tax_price (net_price × tax_symbol / 100)
+- gross_price (net_price + tax_price)`,
     inputSchema: {
       type: 'object',
       properties: {
-        invoice_date: { type: 'string', description: 'Invoice date (YYYY-MM-DD)' },
-        sale_date: { type: 'string', description: 'Sale date (YYYY-MM-DD)' },
-        payment_date: { type: 'string', description: 'Payment due date (YYYY-MM-DD)' },
-        payment_method: { type: 'string', description: 'Payment method (e.g., transfer, cash, card)' },
-        client_id: { type: 'number', description: 'Client ID' },
+        invoice_date: { 
+          type: 'string', 
+          description: 'Invoice issue date in YYYY-MM-DD format (e.g., "2025-10-31")' 
+        },
+        sale_date: { 
+          type: 'string', 
+          description: 'Sale/service date in YYYY-MM-DD format. Usually same as invoice_date' 
+        },
+        payment_date: { 
+          type: 'string', 
+          description: 'Payment due date in YYYY-MM-DD format (e.g., "2025-11-07" for 7 days from issue)' 
+        },
+        payment_method: { 
+          type: 'string', 
+          description: 'Payment method: "transfer", "cash", "card", "payu". In Polish context, usually "transfer"' 
+        },
+        client_id: { 
+          type: 'number', 
+          description: 'Client ID from inFakt system. Use list_clients to find it' 
+        },
         services: {
           type: 'array',
-          description: 'Array of services/products on the invoice',
+          description: 'Array of services/products. Each service MUST have unit_net_price as decimal string with .00',
           items: {
             type: 'object',
             properties: {
-              name: { type: 'string', description: 'Service/product name' },
-              tax_symbol: { type: 'number', description: 'Tax rate (e.g., 23 for 23% VAT)' },
-              quantity: { type: 'number', description: 'Quantity' },
-              unit_net_price: { type: 'string', description: 'Unit net price as decimal string (e.g., "1800.00" not "1800"). API will calculate total amounts.' },
-              unit: { type: 'string', description: 'Unit of measurement (e.g., szt, usł)' },
+              name: { 
+                type: 'string', 
+                description: 'Service/product description (e.g., "Stworzenie strony WWW", "Konsultacje")' 
+              },
+              tax_symbol: { 
+                type: 'number', 
+                description: 'VAT rate: 23 (standard), 8, 5, 0, or -1 (exempt). Most common: 23' 
+              },
+              quantity: { 
+                type: 'number', 
+                description: 'Quantity (default: 1). Use for hourly rates (e.g., 8 hours) or multiple items' 
+              },
+              unit_net_price: { 
+                type: 'string', 
+                description: 'CRITICAL: Unit net price as STRING with 2 decimals. Examples: "500.00" for 500 PLN, "1800.00" for 1800 PLN, "150.00" for 150 PLN. NEVER use: "500", "1800", 150 (without .00)' 
+              },
+              unit: { 
+                type: 'string', 
+                description: 'Unit of measurement: "szt" (pieces), "usł" (service), "godz" (hours), "kg", "m2", etc. Optional' 
+              },
             },
             required: ['name', 'tax_symbol', 'quantity', 'unit_net_price'],
           },
         },
-        notes: { type: 'string', description: 'Additional notes' },
-        currency: { type: 'string', description: 'Currency code (default: PLN)' },
+        notes: { 
+          type: 'string', 
+          description: 'Additional notes on invoice (optional). E.g., "Płatność przelewem", "Termin realizacji: 14 dni"' 
+        },
+        currency: { 
+          type: 'string', 
+          description: 'Currency code (default: "PLN"). Usually not needed for Polish clients' 
+        },
       },
       required: ['invoice_date', 'sale_date', 'payment_date', 'payment_method', 'client_id', 'services'],
     },
@@ -180,24 +286,69 @@ const clientTools = [
   },
   {
     name: 'create_client',
-    description: 'Create a new client in inFakt',
+    description: `Create a new client in inFakt system.
+
+REQUIRED FIELDS:
+================
+- company_name: Full company name or person name
+- street: Street name (without number)
+- city: City name
+- country: Country (usually "Polska" or "Poland")
+- postal_code: Format XX-XXX (e.g., "00-001")
+
+OPTIONAL BUT RECOMMENDED:
+=========================
+- nip: Polish tax ID (10 digits, e.g., "1234567890")
+- email: Client email for invoice delivery
+- street_number: Building number (can include flat, e.g., "10/5")
+
+EXAMPLES:
+=========
+Polish company:
+{
+  "company_name": "ABC Sp. z o.o.",
+  "street": "Marszałkowska",
+  "street_number": "10",
+  "city": "Warszawa",
+  "postal_code": "00-001",
+  "country": "Polska",
+  "nip": "1234567890",
+  "email": "kontakt@abc.pl"
+}
+
+Individual person:
+{
+  "company_name": "Jan Kowalski",
+  "street": "Główna",
+  "street_number": "5",
+  "city": "Kraków",
+  "postal_code": "30-001",
+  "country": "Polska",
+  "email": "jan@example.com"
+}
+
+TIPS:
+=====
+- Always ask for NIP if it's a Polish company (required for VAT invoices)
+- Email is important for automatic invoice sending
+- Use first_name and last_name for individuals (optional)`,
     inputSchema: {
       type: 'object',
       properties: {
-        company_name: { type: 'string', description: 'Company name' },
-        first_name: { type: 'string', description: 'First name' },
-        last_name: { type: 'string', description: 'Last name' },
-        street: { type: 'string', description: 'Street name' },
-        street_number: { type: 'string', description: 'Street number' },
-        flat_number: { type: 'string', description: 'Flat number' },
-        city: { type: 'string', description: 'City' },
-        country: { type: 'string', description: 'Country' },
-        postal_code: { type: 'string', description: 'Postal code' },
-        nip: { type: 'string', description: 'Tax ID (NIP)' },
-        email: { type: 'string', description: 'Email address' },
-        phone: { type: 'string', description: 'Phone number' },
-        bank_account: { type: 'string', description: 'Bank account number' },
-        note: { type: 'string', description: 'Additional notes' },
+        company_name: { type: 'string', description: 'Company name or person full name (REQUIRED)' },
+        first_name: { type: 'string', description: 'First name (for individuals, optional)' },
+        last_name: { type: 'string', description: 'Last name (for individuals, optional)' },
+        street: { type: 'string', description: 'Street name without number (REQUIRED)' },
+        street_number: { type: 'string', description: 'Building number, can include flat (e.g., "10/5")' },
+        flat_number: { type: 'string', description: 'Flat/apartment number (if separate from street_number)' },
+        city: { type: 'string', description: 'City name (REQUIRED)' },
+        country: { type: 'string', description: 'Country name (REQUIRED, e.g., "Polska", "Poland")' },
+        postal_code: { type: 'string', description: 'Postal code XX-XXX format (REQUIRED, e.g., "00-001")' },
+        nip: { type: 'string', description: 'Polish tax ID - 10 digits (IMPORTANT for companies)' },
+        email: { type: 'string', description: 'Email address for invoice delivery (RECOMMENDED)' },
+        phone: { type: 'string', description: 'Phone number (optional)' },
+        bank_account: { type: 'string', description: 'Bank account number IBAN (optional)' },
+        note: { type: 'string', description: 'Internal notes about client (optional)' },
       },
       required: ['company_name', 'street', 'city', 'country', 'postal_code'],
     },
