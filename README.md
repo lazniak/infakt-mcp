@@ -213,10 +213,12 @@ Claude: [wyświetla pełne dane faktury]
 
 ### ➕ Tworzenie nowej faktury
 
+**⚠️ WAŻNE:** Zawsze podawaj ceny jako liczby dziesiętne z formatem "1800.00" (a nie "1800"). API inFakt wymaga formatu dziesiętnego.
+
 ```
 Ty: Utwórz fakturę dla klienta o ID 123, data wystawienia dzisiaj, 
     termin płatności za 14 dni, przelew. Dodaj usługę: Tworzenie 
-    strony WWW, 40 godzin po 150 zł netto, VAT 23%
+    strony WWW, 40 godzin po 150.00 zł netto, VAT 23%
     
 Claude: [tworzy fakturę i wyświetla potwierdzenie]
 ```

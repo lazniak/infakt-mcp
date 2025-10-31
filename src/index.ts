@@ -75,7 +75,7 @@ const invoiceTools = [
   },
   {
     name: 'create_invoice',
-    description: 'Create a new invoice in inFakt',
+    description: 'Create a new invoice in inFakt. The API automatically calculates net_price, gross_price, and tax_price based on unit_net_price, quantity, and tax_symbol. IMPORTANT: unit_net_price must be provided as a decimal string (e.g., "1800.00" for 1800 PLN, not "1800").',
     inputSchema: {
       type: 'object',
       properties: {
@@ -93,7 +93,7 @@ const invoiceTools = [
               name: { type: 'string', description: 'Service/product name' },
               tax_symbol: { type: 'number', description: 'Tax rate (e.g., 23 for 23% VAT)' },
               quantity: { type: 'number', description: 'Quantity' },
-              unit_net_price: { type: 'string', description: 'Unit net price' },
+              unit_net_price: { type: 'string', description: 'Unit net price as decimal string (e.g., "1800.00" not "1800"). API will calculate total amounts.' },
               unit: { type: 'string', description: 'Unit of measurement (e.g., szt, usł)' },
             },
             required: ['name', 'tax_symbol', 'quantity', 'unit_net_price'],

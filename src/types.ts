@@ -47,9 +47,9 @@ export interface InvoiceService {
   tax_symbol: number;
   quantity: number;
   unit_net_price: string;
-  net_price: string;
-  gross_price: string;
-  tax_price: string;
+  net_price?: string;    // Will be calculated if not provided
+  gross_price?: string;   // Will be calculated if not provided
+  tax_price?: string;     // Will be calculated if not provided
   unit?: string;
 }
 
