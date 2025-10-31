@@ -130,9 +130,18 @@ export class InFaktAPIClient {
 
   async listInvoices(params?: InvoiceListParams): Promise<Invoice[]> {
     try {
-      const response = await this.client.get('/invoices.json', { params });
+      // Set default limit to avoid overwhelming the API
+      const safeParams = {
+        limit: 25,  // Default to 25 instead of unlimited
+        ...params
+      };
+      
+      debugLog('list_invoices called with params:', safeParams);
+      const response = await this.client.get('/invoices.json', { params: safeParams });
+      debugLog('list_invoices response:', { count: response.data?.length });
       return response.data;
     } catch (error) {
+      debugLog('ERROR list_invoices:', error);
       this.handleError(error);
     }
   }
@@ -207,9 +216,18 @@ export class InFaktAPIClient {
 
   async listClients(params?: PaginationParams): Promise<Client[]> {
     try {
-      const response = await this.client.get('/clients.json', { params });
+      // Set default limit to avoid overwhelming the API
+      const safeParams = {
+        limit: 25,  // Default to 25 instead of unlimited
+        ...params
+      };
+      
+      debugLog('list_clients called with params:', safeParams);
+      const response = await this.client.get('/clients.json', { params: safeParams });
+      debugLog('list_clients response:', { count: response.data?.length });
       return response.data;
     } catch (error) {
+      debugLog('ERROR list_clients:', error);
       this.handleError(error);
     }
   }
@@ -253,9 +271,18 @@ export class InFaktAPIClient {
 
   async listProducts(params?: PaginationParams): Promise<Product[]> {
     try {
-      const response = await this.client.get('/products.json', { params });
+      // Set default limit to avoid overwhelming the API
+      const safeParams = {
+        limit: 25,
+        ...params
+      };
+      
+      debugLog('list_products called with params:', safeParams);
+      const response = await this.client.get('/products.json', { params: safeParams });
+      debugLog('list_products response:', { count: response.data?.length });
       return response.data;
     } catch (error) {
+      debugLog('ERROR list_products:', error);
       this.handleError(error);
     }
   }
