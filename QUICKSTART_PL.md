@@ -67,13 +67,17 @@ npm run build
 
 ### 5. Skonfiguruj klucz API
 
-Utwórz plik `.env` w katalogu głównym projektu:
+**Dla Claude Desktop:** Klucz API ustawiasz w konfiguracji Claude Desktop (krok 6 poniżej).
+
+**Dla lokalnego testowania:** Utwórz plik `.env` w katalogu głównym projektu:
 
 ```
 INFAKT_API_KEY=twoj_klucz_api_tutaj
 ```
 
-**Uwaga:** Możesz też użyć `.env.local` - oba pliki są automatycznie wczytywane przez serwer.
+Następnie uruchom: `npm run dev`
+
+**Uwaga:** Plik `.env` działa tylko dla lokalnego developmentu. W Claude Desktop klucz MUSI być w pliku konfiguracyjnym.
 
 ### 6. Skonfiguruj Claude Desktop
 

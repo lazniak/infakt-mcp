@@ -34,13 +34,15 @@ npm install
 npm run build
 ```
 
-**Note:** The server now supports loading API keys from `.env` files automatically using the `dotenv` package.
+**Note:** The server now supports loading API keys from `.env` files when running locally using `npm run dev` (which uses dotenv-cli). For Claude Desktop integration, always set the API key in `claude_desktop_config.json`.
 
 ## Configuration
 
 ### 1. Set up your API key
 
-Create a `.env` file in the project root:
+**For Claude Desktop:** Set the API key in your Claude Desktop configuration (see step 2 below).
+
+**For local development/testing:** Create a `.env` file in the project root:
 
 ```bash
 cp env.example .env
@@ -51,6 +53,8 @@ Edit `.env` and add your inFakt API key:
 ```
 INFAKT_API_KEY=your_actual_api_key_here
 ```
+
+Then run with: `npm run dev`
 
 ### 2. Configure Claude Desktop
 
@@ -77,6 +81,8 @@ Add this server to your Claude Desktop configuration file:
 ```
 
 **Note:** Replace the path with the actual path to your installation.
+
+**Important:** The API key MUST be set in the `env` section of the configuration above. The server does not use `.env` files when running through Claude Desktop (to avoid stdio conflicts).
 
 ### 3. Restart Claude Desktop
 

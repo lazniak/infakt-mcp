@@ -7,7 +7,6 @@
  * Supports invoices, clients, products, payments, and bank accounts with CRUD operations
  */
 
-import { config } from 'dotenv';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
@@ -16,10 +15,9 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { InFaktAPIClient } from './infakt-client.js';
 
-// Load environment variables from .env file
-config();
-
 // Load API key from environment
+// Note: When using with Claude Desktop, set INFAKT_API_KEY in claude_desktop_config.json
+// For local development, you can use a .env file with dotenv-cli: npx dotenv-cli node dist/index.js
 const INFAKT_API_KEY = process.env.INFAKT_API_KEY;
 
 if (!INFAKT_API_KEY) {
