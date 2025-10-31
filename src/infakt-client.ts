@@ -107,9 +107,18 @@ export class InFaktAPIClient {
         services: normalizeInvoiceServices(data.services),
       };
       
+      // Debug logging to help troubleshoot price issues
+      console.error('[inFakt MCP] Creating invoice with normalized data:');
+      console.error('[inFakt MCP] Services:', JSON.stringify(normalizedData.services, null, 2));
+      
       const response = await this.client.post('/invoices.json', { invoice: normalizedData });
+      
+      console.error('[inFakt MCP] Invoice created successfully. ID:', response.data.id);
+      console.error('[inFakt MCP] Net price:', response.data.net_price);
+      
       return response.data;
     } catch (error) {
+      console.error('[inFakt MCP] Error creating invoice:', error);
       this.handleError(error);
     }
   }
