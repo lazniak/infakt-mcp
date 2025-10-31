@@ -4,6 +4,9 @@
  */
 
 import axios, { AxiosInstance, AxiosError } from 'axios';
+import { writeFileSync, appendFileSync } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 import type {
   Invoice,
   InvoiceListParams,
@@ -39,6 +42,23 @@ function formatPrice(price: string | number): string {
 }
 
 /**
+ * Log to file for debugging
+ */
+const logFile = join(homedir(), 'infakt-mcp-debug.log');
+function debugLog(message: string, data?: any) {
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] ${message}${data ? '\n' + JSON.stringify(data, null, 2) : ''}\n`;
+  try {
+    appendFileSync(logFile, logMessage);
+  } catch (error) {
+    // Ignore file write errors
+  }
+}
+
+// Log startup
+debugLog('inFakt MCP Client initialized');
+
+/**
  * Normalize invoice services to ensure proper price formatting
  * Also calculates net_price, gross_price, and tax_price if not provided
  */
@@ -52,6 +72,18 @@ function normalizeInvoiceServices(services: any[]): any[] {
     const netPrice = unitNetPrice * quantity;
     const taxPrice = netPrice * taxRate;
     const grossPrice = netPrice + taxPrice;
+    
+    debugLog('Normalizing service', {
+      input: service,
+      calculated: {
+        unitNetPrice,
+        quantity,
+        taxRate,
+        netPrice,
+        taxPrice,
+        grossPrice
+      }
+    });
     
     return {
       ...service,
@@ -116,26 +148,26 @@ export class InFaktAPIClient {
 
   async createInvoice(data: CreateInvoiceParams): Promise<Invoice> {
     try {
+      debugLog('=== CREATE INVOICE CALLED ===');
+      debugLog('Input data:', data);
+      
       // Normalize services to ensure proper price formatting
       const normalizedData = {
         ...data,
         services: normalizeInvoiceServices(data.services),
       };
       
-      // Debug logging to help troubleshoot price issues
-      console.error('[inFakt MCP] Creating invoice with normalized data:');
-      console.error('[inFakt MCP] Services:', JSON.stringify(normalizedData.services, null, 2));
-      console.error('[inFakt MCP] FULL REQUEST BODY:', JSON.stringify({ invoice: normalizedData }, null, 2));
+      debugLog('Normalized data:', normalizedData);
+      debugLog('FULL REQUEST BODY to API:', { invoice: normalizedData });
       
       const response = await this.client.post('/invoices.json', { invoice: normalizedData });
       
-      console.error('[inFakt MCP] Invoice created successfully. ID:', response.data.id);
-      console.error('[inFakt MCP] Net price from API:', response.data.net_price);
-      console.error('[inFakt MCP] FULL RESPONSE:', JSON.stringify(response.data, null, 2));
+      debugLog('API Response:', response.data);
+      debugLog('Invoice created - Net price from API:', response.data.net_price);
       
       return response.data;
     } catch (error) {
-      console.error('[inFakt MCP] Error creating invoice:', error);
+      debugLog('ERROR creating invoice:', error);
       this.handleError(error);
     }
   }
