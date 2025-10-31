@@ -3,7 +3,7 @@
     "infakt": {
       "command": "node",
       "args": [
-        "/absolute/path/to/infakt-mcp/dist/index.js"
+        "A:\\code\\inFakt-mpc\\dist\\index.js"
       ],
       "env": {
         "INFAKT_API_KEY": "your_infakt_api_key_here"
@@ -11,4 +11,5 @@
     }
   }
 }
+
 
