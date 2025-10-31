@@ -40,13 +40,28 @@ function formatPrice(price: string | number): string {
 
 /**
  * Normalize invoice services to ensure proper price formatting
+ * Also calculates net_price, gross_price, and tax_price if not provided
  */
 function normalizeInvoiceServices(services: any[]): any[] {
-  return services.map(service => ({
-    ...service,
-    unit_net_price: formatPrice(service.unit_net_price),
-    quantity: service.quantity || 1,
-  }));
+  return services.map(service => {
+    const unitNetPrice = parseFloat(formatPrice(service.unit_net_price));
+    const quantity = service.quantity || 1;
+    const taxRate = service.tax_symbol / 100;
+    
+    // Calculate all prices
+    const netPrice = unitNetPrice * quantity;
+    const taxPrice = netPrice * taxRate;
+    const grossPrice = netPrice + taxPrice;
+    
+    return {
+      ...service,
+      unit_net_price: formatPrice(unitNetPrice),
+      quantity: quantity,
+      net_price: formatPrice(netPrice),
+      gross_price: formatPrice(grossPrice),
+      tax_price: formatPrice(taxPrice),
+    };
+  });
 }
 
 export class InFaktAPIClient {
@@ -110,11 +125,13 @@ export class InFaktAPIClient {
       // Debug logging to help troubleshoot price issues
       console.error('[inFakt MCP] Creating invoice with normalized data:');
       console.error('[inFakt MCP] Services:', JSON.stringify(normalizedData.services, null, 2));
+      console.error('[inFakt MCP] FULL REQUEST BODY:', JSON.stringify({ invoice: normalizedData }, null, 2));
       
       const response = await this.client.post('/invoices.json', { invoice: normalizedData });
       
       console.error('[inFakt MCP] Invoice created successfully. ID:', response.data.id);
-      console.error('[inFakt MCP] Net price:', response.data.net_price);
+      console.error('[inFakt MCP] Net price from API:', response.data.net_price);
+      console.error('[inFakt MCP] FULL RESPONSE:', JSON.stringify(response.data, null, 2));
       
       return response.data;
     } catch (error) {
