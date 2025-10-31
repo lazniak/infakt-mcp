@@ -1,0 +1,40 @@
+{
+  "name": "infakt-mcp",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for inFakt API - full support for invoices, clients, products, payments, and bank accounts",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "dev": "tsc && node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "infakt",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "invoices",
+    "accounting"
+  ],
+  "author": "lazniak",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lazniak/infakt-mcp.git"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
