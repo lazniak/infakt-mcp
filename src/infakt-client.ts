@@ -28,8 +28,8 @@ import type {
 } from './types.js';
 
 /**
- * Format price to ensure it has 2 decimal places
- * Fixes issue where "500" becomes 5.00 instead of 500.00
+ * Format price to ensure it has 2 decimal places with COMMA (Polish format)
+ * API inFakt requires Polish number format: 500,00 not 500.00
  */
 function formatPrice(price: string | number): string {
   const numPrice = typeof price === 'string' ? parseFloat(price) : price;
@@ -38,7 +38,8 @@ function formatPrice(price: string | number): string {
     throw new Error(`Invalid price value: ${price}`);
   }
   
-  return numPrice.toFixed(2);
+  // Format with 2 decimals and replace dot with COMMA (Polish format)
+  return numPrice.toFixed(2).replace('.', ',');
 }
 
 /**
